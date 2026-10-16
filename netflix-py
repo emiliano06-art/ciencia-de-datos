@@ -1,0 +1,15 @@
+import pandas as pd
+import streamlit as st
+
+st.title("Peliculas Dataset")
+
+data = pd.read_csv(
+    "https://raw.githubusercontent.com/adsoftsito/ciencia-datos/refs/heads/main/movies.csv"
+)
+st.dataframe(data)
+
+# Cambia 'embarked' por el nombre real de una columna de tu dataset, por ejemplo 'genre'
+selected_genre = st.selectbox("Select Genre", data["genre"].unique())
+filtered_data = data[data["genre"] == selected_genre]
+
+st.dataframe(filtered_data)
