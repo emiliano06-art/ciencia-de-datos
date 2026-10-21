@@ -1,9 +1,8 @@
-mport streamlit as st
+import streamlit as st
 import pandas as pd
 
 st.set_page_config(
-    page_title="Dashboard en Producción",
-    page_icon="📊",
+    page_title="Retos ",
     layout="wide"
 )
 @st.cache_data
@@ -54,49 +53,52 @@ st.markdown("---")
 if st.sidebar.checkbox("Visualizar dataset completo / filtrado", value=False):
     st.subheader("Vista previa del Dataset")
     st.dataframe(df_filtrado, use_container_width=True)
+   
+
 
 st.subheader("Gráficas de Análisis")
 
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("*Gráfica 1: Ventas por Categoría (Barras)*")
-    if not df_filtrado.empty:
-        df_barras = df_filtrado.groupby('Categoria')['Ventas'].sum()
-        st.bar_chart(df_barras)
-    else:
-        st.info("No hay datos para mostrar con los filtros actualizados.")
-
-with col2:
-    st.markdown("*Gráfica 2: Relación Ventas vs Satisfacción (Dispersión)*")
-    if not df_filtrado.empty:
-        st.scatter_chart(df_filtrado, x='Ventas', y='Satisfaccion', color='Categoria')
-    else:
-        st.info("No hay datos para mostrar.")
-
-st.markdown("*Gráfica 3: Ventas por Ciudad de Origen (Líneas)*")
 if not df_filtrado.empty:
-    df_lineas = df_filtrado.groupby('Ciudad_Origen')['Ventas'].sum()
-    st.line_chart(df_lineas)
-else:
-    st.info("No hay datos para mostrar.")
+    col1, col2 = st.columns(2)
 
-st.markdown("---")
-st.header("Acerca de...")
+    
+    with col1:
+        st.markdown("##### Gráfica 1: Ventas por Categoría")
+        df_barras1 = df_filtrado.groupby('Categoria')['Ventas'].sum()
+        st.bar_chart(df_barras1)
 
-autor_nombre = "Emiliano Rico Borbonio"
-autor_matrícula = "sZ26004582"
-ciudad_natal = "Orizaba, Veracruz"
+    
+    with col2:
+        st.markdown("##### Gráfica 2: Relación Ventas vs Satisfacción")
+        df_barras2 = df_filtrado.groupby('Satisfaccion')['Ventas'].sum()
+        st.bar_chart(df_barras2)
 
-st.markdown(f"""
-* *Autor:* {autor_nombre}[span_0](start_span)[span_0](end_span)
-* *Matrícula:* {autor_matrícula}[span_1](start_span)[span_1](end_span)
-* *Ciudad Natal:* {ciudad_natal}[span_2](start_span)[span_2](end_span)
-""")
+    st.markdown("---")
 
-map_data = pd.DataFrame({
-    'lat': [18.8497],
-    'lon': [-97.1036]
-})
-st.subheader(f"Mapa GPS de Ciudad Natal: {ciudad_natal}")
-st.map(map_data, zoom=11)
+    
+    st.markdown("##### Gráfica 3: Ventas por Ciudad de Origen")
+    df_barras3 = df_filtrado.groupby('Ciudad_Origen')['Ventas'].sum()
+    st.bar_chart(df_barras3)
+
+mostrar_acerca_de = st.sidebar.checkbox("Mostrar sección Acerca de...", value=False)
+if mostrar_acerca_de:
+    st.markdown("---")
+    st.header("Acerca de...")
+
+    autor_nombre = "Emiliano Rico Borbonio"
+    autor_matricula = "sZ26004582"
+    ciudad_natal = "Orizaba, Veracruz"
+
+    st.markdown(f"""
+    * *Autor:* {autor_nombre}
+    * *Matrícula:* {autor_matricula}
+    * *Ciudad Natal:* {ciudad_natal}
+    """)
+
+    map_data = pd.DataFrame({
+        'lat': [18.8497],
+        'lon': [-97.1036]
+    })
+
+    st.subheader(f"Mapa GPS de Ciudad Natal: {ciudad_natal}")
+    st.map(map_data, zoom=12)
